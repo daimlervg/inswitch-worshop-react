@@ -12,7 +12,7 @@ export default function Header() {
             <a className="navbar-brand" href="#">Entities</a>
             <form className="form-inline my-2 my-lg-0">
                 <Link className="btn btn-outline-success my-2 my-sm-0" to="create-entity">
-                  New
+                  Nuevo
                 </Link>
             </form>
             </div>

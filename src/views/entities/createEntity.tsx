@@ -1,40 +1,38 @@
-import useEntities from "../../hooks/useEntites";
 import 'bootstrap/dist/css/bootstrap.css'
 import { useState } from "react";
-import {useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { addEntity } from "../../services/api";
 
 export default function CreateEntity(){
 const navigate = useNavigate();
-    useEntities();
 const [entity, setEntity] = useState({
     name: {
-      firstName: "John",
-      lastName: "Wick",
-      fullName: "John Wick"
+      firstName: "",
+      lastName: "",
+      fullName: ""
     },
     contact: {
-      phoneNumber: "50511111111",
-      email: "user@example.com",
+      phoneNumber: "",
+      email: "",
       postalAddress: {
-        addressLine1: "Calle 1",
-        addressLine2: "Calle 2",
-        city: "Managua",
-        stateProvince: "Managua",
-        postalCode: "11300",
-        country: "NI"
+        addressLine1: "",
+        addressLine2: "",
+        city: "",
+        stateProvince: "",
+        postalCode: "",
+        country: ""
       }
     },
     idDocuments: [
       {
         idType: "nationalId",
         idNumber: "7890658",
-        issueDate: "2023-04-18",
-        expiryDate: "2033-04-18",
+        issueDate: "2025-01-01",
+        expiryDate: "2035-01-01",
         issuerCountry: "NI"
       }
     ],
-    dateOfBirth: "1980-02-22",
+    dateOfBirth: "",
     birthCountry: "NI",
     nationality: "NI",
     residenceCountry: "NI",
@@ -50,15 +48,36 @@ const [entity, setEntity] = useState({
     }));
   };
 
-  const handelSubmit = async (event: any) => {
+  const handleInputChange = (e: any, fieldPath: string[]) => {
+    const { value } = e.target;
+    setEntity((prevData:  any) => {
+      // Crea una copia de formData para no mutar directamente el estado anterior
+      const updatedData = { ...prevData };
+      let target = updatedData as any;
+  
+      // Recorre fieldPath para llegar al campo final y crea los niveles intermedios si no existen
+      for (let i = 0; i < fieldPath.length - 1; i++) {
+        const key = fieldPath[i];
+        if (!(key in target) || typeof target[key] !== 'object') {
+          target[key] = {};  // Crea un objeto vacío si el nivel no existe
+        }
+        target = target[key];
+      }
+  
+      // Establece el valor en el último campo del path
+      target[fieldPath[fieldPath.length - 1]] = value;
+      return updatedData;
+    });
+  };
+
+  const handleSubmit = async (event: any) => {
     event.preventDefault();
-    console.log(entity)
-    //addEntity(entity) TODO: Fix error
+    addEntity(entity);
     navigate('/');
 }
 
     return (
-        <form className="p-4" onSubmit={handelSubmit}>
+        <form className="p-4" onSubmit={handleSubmit}>
         <h2>Entity Information</h2>
         
         <div className="mb-3">
@@ -67,8 +86,8 @@ const [entity, setEntity] = useState({
           type="text"
           name="firstName"
           className="form-control"
-          value={entity.name.firstName}
-          onChange={handleChange}
+          defaultValue={entity.name.firstName}
+          onChange={(e) => handleInputChange(e, ['name', 'firstName'])}
         />
       </div>
 
@@ -78,8 +97,8 @@ const [entity, setEntity] = useState({
           type="text"
           name="lastName"
           className="form-control"
-          value={entity.name.lastName}
-          onChange={handleChange}
+          defaultValue={entity.name.lastName}
+          onChange={(e) => handleInputChange(e, ['name', 'lastName'])}
         />
       </div>
 
@@ -89,8 +108,8 @@ const [entity, setEntity] = useState({
           type="text"
           name="phoneNumber"
           className="form-control"
-          value={entity.contact.phoneNumber}
-          onChange={handleChange}
+          defaultValue={entity.contact.phoneNumber}
+          onChange={(e) => handleInputChange(e, ['contact', 'phoneNumber'])}
         />
       </div>
 
@@ -100,8 +119,8 @@ const [entity, setEntity] = useState({
           type="email"
           name="email"
           className="form-control"
-          value={entity.contact.email}
-          onChange={handleChange}
+          defaultValue={entity.contact.email}
+          onChange={(e) => handleInputChange(e, ['contact', 'email'])}
         />
       </div>
 
@@ -111,8 +130,8 @@ const [entity, setEntity] = useState({
           type="text"
           name="addressLine1"
           className="form-control"
-          value={entity.contact.postalAddress.addressLine1}
-          onChange={handleChange}
+          defaultValue={entity.contact.postalAddress.addressLine1}
+          onChange={(e) => handleInputChange(e, ['contact', 'postalAddress', 'addressLine1'])}
         />
       </div>
 
@@ -122,8 +141,8 @@ const [entity, setEntity] = useState({
           type="text"
           name="addressLine2"
           className="form-control"
-          value={entity.contact.postalAddress.addressLine2}
-          onChange={handleChange}
+          defaultValue={entity.contact.postalAddress.addressLine2}
+          onChange={(e) => handleInputChange(e, ['contact', 'postalAddress', 'addressLine2'])}
         />
       </div>
 
@@ -133,8 +152,8 @@ const [entity, setEntity] = useState({
           type="text"
           name="city"
           className="form-control"
-          value={entity.contact.postalAddress.city}
-          onChange={handleChange}
+          defaultValue={entity.contact.postalAddress.city}
+          onChange={(e) => handleInputChange(e, ['contact', 'postalAddress', 'city'])}
         />
       </div>
 
@@ -144,8 +163,8 @@ const [entity, setEntity] = useState({
           type="text"
           name="stateProvince"
           className="form-control"
-          value={entity.contact.postalAddress.stateProvince}
-          onChange={handleChange}
+          defaultValue={entity.contact.postalAddress.stateProvince}
+          onChange={(e) => handleInputChange(e, ['contact', 'postalAddress', 'stateProvince'])}
         />
       </div>
 
@@ -155,8 +174,8 @@ const [entity, setEntity] = useState({
           type="text"
           name="postalCode"
           className="form-control"
-          value={entity.contact.postalAddress.postalCode}
-          onChange={handleChange}
+          defaultValue={entity.contact.postalAddress.postalCode}
+          onChange={(e) => handleInputChange(e, ['contact', 'postalAddress', 'postalCode'])}
         />
       </div>
 
@@ -166,8 +185,8 @@ const [entity, setEntity] = useState({
           type="text"
           name="country"
           className="form-control"
-          value={entity.contact.postalAddress.country}
-          onChange={handleChange}
+          defaultValue={entity.contact.postalAddress.country}
+          onChange={(e) => handleInputChange(e, ['contact', 'postalAddress', 'country'])}
         />
       </div>
 
@@ -177,8 +196,8 @@ const [entity, setEntity] = useState({
           type="date"
           name="dateOfBirth"
           className="form-control"
-          value={entity.dateOfBirth}
-          onChange={handleChange}
+          defaultValue={entity.dateOfBirth}
+          onChange={(e) => handleInputChange(e, ['dateOfBirth'])}
         />
       </div>
 
@@ -187,16 +206,15 @@ const [entity, setEntity] = useState({
         <select
           name="gender"
           className="form-select"
-          value={entity.gender}
-          onChange={handleChange}
+          defaultValue={entity.gender}
+          onChange={(e) => handleInputChange(e, ['gender'])}
         >
           <option value="m">Male</option>
           <option value="f">Female</option>
         </select>
       </div>
-        
-        <button type="submit" className="btn btn-primary">Submit</button>
+        <Link to={`/`} className="btn btn-light ms-2">Cancelar</Link>
+        <button type="submit" className="btn btn-primary">Guardar</button>
       </form>
-        
     );
 }
